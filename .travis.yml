@@ -1,0 +1,38 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t lior/fibo-docker-test -f ./client/Dockerfile.dev .
+
+script:
+  - docker run -e CI=true lior/fibo-docker-test  npm run test -- --coverage
+
+after_success:
+  - docker build -t lior/fibo-docker-client -f ./client .
+  - docker build -t lior/fibo-docker-server -f ./server .
+  - docker build -t lior/fibo-docker-worker -f ./worker .
+  - docker build -t lior/fibo-docker-nginx -f ./nginx .
+  # login docker cli
+  - echo "$DOCKER_PWD" | docker login -u "$DOCKER_ID" --password-stdin
+  # take those images and oush them to docker hub
+  - docker push lior/fibo-docker-client
+  - docker push lior/fibo-docker-server
+  - docker push lior/fibo-docker-worker
+  - docker push lior/fibo-docker-nginx
+
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "docker"
+  env: "Docker-env"
+  bucket_name: "elasticbeanstalk-us-east-2-476956259333"
+  bucket_path: "docker-react"
+  on:
+    branch: master
+  access_key_id:
+    secure: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY"
