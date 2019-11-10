@@ -3,11 +3,11 @@ sudo: required
 services:
   - docker
 
-before_install:
-  - docker build -t lior/fibo-docker-test -f ./client/Dockerfile.dev .
-
-script:
-  - docker run -e CI=true lior/fibo-docker-test  npm run test -- --coverage
+#before_install:
+#  - docker build -t lior/fibo-docker-test -f ./client/Dockerfile.dev .
+#
+#script:
+#  - docker run -e CI=true lior/fibo-docker-test  npm run test -- --coverage
 
 after_success:
   - docker build -t lior/fibo-docker-client -f ./client .
