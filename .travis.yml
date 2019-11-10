@@ -4,7 +4,7 @@ services:
   - docker
 
 before_install:
-  - docker build -t lior/fibo-docker-test -f ./client/Dockerfile.dev .
+  - docker build -t lior/fibo-docker-test -f Dockerfile.dev ./client
 
 script:
   - docker run -e CI=true lior/fibo-docker-test  npm run test -- --coverage
