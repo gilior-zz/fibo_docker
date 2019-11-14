@@ -1,0 +1,36 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "client",
+      "image": "lior5074/fibo-docker-client",
+      "hostname": "client",
+      "essential": false
+    },
+    {
+      "name": "server",
+      "image": "lior5074/fibo-docker-server",
+      "hostname": "api",
+      "essential": false
+    },
+    {
+      "name": "worker",
+      "image": "lior5074/fibo-docker-worker",
+      "essential": false
+    },
+    {
+      "name": "nginx",
+      "image": "lior5074/fibo-docker-nginx",
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPprt": 80,
+          "containerPort": 80
+        }
+      ],
+      "links": [
+        "client","server"
+      ]
+    }
+  ]
+}
